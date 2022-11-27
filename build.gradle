@@ -37,10 +37,13 @@ spotless {
 
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	//Flapdoodle
+	implementation group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '4.0.7-beta'
+
 
 	//Mapstruct
 	implementation "org.mapstruct:mapstruct:1.5.3.Final"
@@ -56,6 +59,8 @@ dependencies {
 	//Mapstruct - Lombok binding
 	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 	testAnnotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+
+
 }
 
 compileJava {
