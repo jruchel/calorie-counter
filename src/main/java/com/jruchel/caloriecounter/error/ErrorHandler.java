@@ -1,6 +1,7 @@
 package com.jruchel.caloriecounter.error;
 
 import com.jruchel.caloriecounter.model.api.ErrorResponse;
+import jakarta.validation.ValidationException;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,6 @@ public class ErrorHandler {
                                 .build());
     }
 
-    @Order(1)
     @ExceptionHandler(FieldValueValidationException.class)
     public ResponseEntity<ErrorResponse> fieldValueValidationException(
             FieldValueValidationException fieldValueValidationException) {
@@ -39,6 +39,14 @@ public class ErrorHandler {
                         fieldValueValidationException.getMessage(),
                         new Date(),
                         HttpStatus.CONFLICT));
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> validationException(
+            ValidationException validationException) {
+        return createResponseEntity(
+                new ErrorResponse(
+                        validationException.getMessage(), new Date(), HttpStatus.CONFLICT));
     }
 
     private ResponseEntity<ErrorResponse> createResponseEntity(ErrorResponse errorResponse) {

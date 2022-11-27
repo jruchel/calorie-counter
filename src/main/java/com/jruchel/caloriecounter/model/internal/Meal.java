@@ -1,6 +1,6 @@
 package com.jruchel.caloriecounter.model.internal;
 
-import java.util.Date;
+import java.util.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,9 +13,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 public class Meal {
 
-    @Id private String id;
+    @Builder.Default @Id private String id = UUID.randomUUID().toString();
     private String userId;
     private String name;
     private int calories;
+    @Builder.Default private Map<String, Integer> foods = new HashMap<>();
     private Date date;
 }

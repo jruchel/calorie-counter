@@ -37,6 +37,7 @@ spotless {
 
 
 dependencies {
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
