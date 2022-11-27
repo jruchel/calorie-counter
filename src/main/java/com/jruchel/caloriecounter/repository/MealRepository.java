@@ -1,6 +1,7 @@
 package com.jruchel.caloriecounter.repository;
 
 import com.jruchel.caloriecounter.model.internal.Meal;
+import com.jruchel.caloriecounter.service.DateUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,12 @@ public interface MealRepository extends MongoRepository<Meal, String> {
                                         ExampleMatcher.StringMatcher.EXACT));
         Example<Meal> mealExample = Example.of(Meal.builder().userId(userId).build(), matcher);
         return findAll(mealExample);
+    }
+
+    default List<Meal> findTodaysMealsByUser(final String userId) {
+        return findMealsByUser(userId).stream()
+                .filter(meal -> DateUtils.isSameDay(meal.getDate(), new Date()))
+                .collect(Collectors.toList());
     }
 
     default List<Meal> findMealsByDateForUser(String userId, Date date) {

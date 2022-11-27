@@ -46,10 +46,16 @@ public class IntakeController {
         return ResponseEntity.ok(responseBody);
     }
 
+    @GetMapping("/meals/{username}/today")
+    public ResponseEntity<List<MealDTO>> getTodaysMealsByUser(@PathVariable String username) {
+        List<MealDTO> responseBody =
+                mealMapper.toDTOList(mealService.getTodaysMealsForUser(username));
+        return ResponseEntity.ok(responseBody);
+    }
+
     @GetMapping("/meals/{username}")
     public ResponseEntity<List<MealDTO>> getMealsByUser(@PathVariable String username) {
         List<MealDTO> responseBody = mealMapper.toDTOList(mealService.getMealsByUser(username));
-
         return ResponseEntity.ok(responseBody);
     }
 }
