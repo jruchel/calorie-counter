@@ -1,5 +1,6 @@
 package com.jruchel.caloriecounter.service;
 
+import com.jruchel.caloriecounter.model.internal.DailyIntakeReport;
 import com.jruchel.caloriecounter.model.internal.Meal;
 import com.jruchel.caloriecounter.model.internal.User;
 import com.jruchel.caloriecounter.repository.MealRepository;
@@ -37,6 +38,24 @@ public class MealService extends AbstractService<Meal> {
         return mealRepository.insert(entry);
     }
 
+    public DailyIntakeReport generateDailyIntakeReport(final String username) {
+        User user = userService.findByUsername(username);
+        List<Meal> meals = getTodaysMealsForUser(username);
+        int caloriesConsumed = sumDailyCalories(meals);
+        int leftToConsume = user.getDailyLimit() - caloriesConsumed;
+        int dailyLimit = user.getDailyLimit();
+        boolean dailyLimitReached = isDailyLimitReached(dailyLimit, caloriesConsumed);
+        return new DailyIntakeReport(
+                username,
+                DateUtils.removeTime(new Date()),
+                user.getDailyLimit(),
+                sumDailyCalories(meals),
+                meals,
+                leftToConsume,
+                dailyLimitReached,
+                dailyLimitReached && isDailyLimitExceeded(dailyLimit, caloriesConsumed));
+    }
+
     public List<Meal> getTodaysMealsForUser(final String username) {
         User user = userService.findByUsername(username);
         return mealRepository.findTodaysMealsByUser(user.getId());
@@ -52,5 +71,23 @@ public class MealService extends AbstractService<Meal> {
     public List<Meal> getMealsByUser(String username) {
         User user = userService.findByUsername(username);
         return mealRepository.findMealsByUser(user.getId());
+    }
+
+    private boolean isDailyLimitReached(int dailyLimit, int caloriesConsumed) {
+        int difference = dailyLimit - caloriesConsumed;
+        return difference < (double) 2 / 100 * dailyLimit;
+    }
+
+    private boolean isDailyLimitExceeded(int dailyLimit, int caloriesConsumed) {
+        int difference = Math.abs(dailyLimit - caloriesConsumed);
+        return difference > (double) 2 / 100 * dailyLimit;
+    }
+
+    private int sumDailyCalories(List<Meal> meals) {
+        int sum = 0;
+        for (Meal m : meals) {
+            sum += m.getCalories();
+        }
+        return sum;
     }
 }

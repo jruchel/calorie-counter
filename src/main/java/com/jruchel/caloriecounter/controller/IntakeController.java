@@ -1,6 +1,7 @@
 package com.jruchel.caloriecounter.controller;
 
 import com.jruchel.caloriecounter.mapper.MealMapper;
+import com.jruchel.caloriecounter.model.api.meal.DailyIntakeReportDTO;
 import com.jruchel.caloriecounter.model.api.meal.MealAdditionRequest;
 import com.jruchel.caloriecounter.model.api.meal.MealDTO;
 import com.jruchel.caloriecounter.model.api.meal.MealDeletionRequest;
@@ -32,6 +33,14 @@ public class IntakeController {
                         mealAdditionRequest.getFoods());
 
         return ResponseEntity.status(201).body(mealMapper.toDTO(meal));
+    }
+
+    @GetMapping("/report/daily/{username}")
+    public ResponseEntity<DailyIntakeReportDTO> getDailyIntakeReport(
+            @PathVariable String username) {
+        DailyIntakeReportDTO responseBody =
+                mealMapper.toDailyReportDTO(mealService.generateDailyIntakeReport(username));
+        return ResponseEntity.ok(responseBody);
     }
 
     @DeleteMapping("/meals/{username}")
