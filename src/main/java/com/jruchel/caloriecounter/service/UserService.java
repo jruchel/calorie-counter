@@ -3,6 +3,7 @@ package com.jruchel.caloriecounter.service;
 import com.jruchel.caloriecounter.error.FieldValueValidationException;
 import com.jruchel.caloriecounter.model.internal.User;
 import com.jruchel.caloriecounter.repository.UserRepository;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,10 @@ public class UserService extends AbstractService<User> {
         verifyUsername(username);
         User user = new User(UUID.randomUUID().toString(), username, dailyLimit);
         return userRepository.insert(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     public User findByUsername(final String username) {

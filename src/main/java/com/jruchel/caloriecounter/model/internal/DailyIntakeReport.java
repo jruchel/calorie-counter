@@ -2,6 +2,7 @@ package com.jruchel.caloriecounter.model.internal;
 
 import java.util.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -12,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 public class DailyIntakeReport {
 
+    @Id private String id;
     private String username;
     private Date date;
     private int calorieLimit;

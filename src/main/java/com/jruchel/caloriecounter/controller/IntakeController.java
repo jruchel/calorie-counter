@@ -6,6 +6,7 @@ import com.jruchel.caloriecounter.model.api.meal.MealAdditionRequest;
 import com.jruchel.caloriecounter.model.api.meal.MealDTO;
 import com.jruchel.caloriecounter.model.api.meal.MealDeletionRequest;
 import com.jruchel.caloriecounter.model.internal.Meal;
+import com.jruchel.caloriecounter.service.IntakeReportService;
 import com.jruchel.caloriecounter.service.MealService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -20,6 +21,7 @@ public class IntakeController {
 
     private final MealService mealService;
     private final MealMapper mealMapper;
+    private final IntakeReportService intakeReportService;
 
     @PostMapping("/meals/{username}")
     public ResponseEntity<MealDTO> addMeal(
@@ -39,7 +41,8 @@ public class IntakeController {
     public ResponseEntity<DailyIntakeReportDTO> getDailyIntakeReport(
             @PathVariable String username) {
         DailyIntakeReportDTO responseBody =
-                mealMapper.toDailyReportDTO(mealService.generateDailyIntakeReport(username));
+                mealMapper.toDailyReportDTO(
+                        intakeReportService.generateDailyIntakeReport(username));
         return ResponseEntity.ok(responseBody);
     }
 

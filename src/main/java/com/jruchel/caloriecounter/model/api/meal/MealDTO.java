@@ -1,5 +1,6 @@
 package com.jruchel.caloriecounter.model.api.meal;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Min;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,5 +20,7 @@ public class MealDTO {
     private int calories;
 
     @Builder.Default private Map<String, Integer> foods = new HashMap<>();
-    private Date date;
+
+    @JsonFormat(pattern = "HH:mm:ss")
+    private Date time;
 }

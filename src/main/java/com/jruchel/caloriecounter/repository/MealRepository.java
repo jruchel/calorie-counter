@@ -27,13 +27,13 @@ public interface MealRepository extends MongoRepository<Meal, String> {
 
     default List<Meal> findTodaysMealsByUser(final String userId) {
         return findMealsByUser(userId).stream()
-                .filter(meal -> DateUtils.isSameDay(meal.getDate(), new Date()))
+                .filter(meal -> DateUtils.isSameDay(meal.getTime(), new Date()))
                 .collect(Collectors.toList());
     }
 
     default List<Meal> findMealsByDateForUser(String userId, Date date) {
         return findMealsByUser(userId).stream()
-                .filter(meal -> meal.getDate().equals(date))
+                .filter(meal -> meal.getTime().equals(date))
                 .collect(Collectors.toList());
     }
 

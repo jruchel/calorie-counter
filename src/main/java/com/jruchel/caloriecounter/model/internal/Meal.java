@@ -18,5 +18,5 @@ public class Meal {
     private String name;
     private int calories;
     @Builder.Default private Map<String, Integer> foods = new HashMap<>();
-    private Date date;
+    private Date time;
 }

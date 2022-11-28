@@ -1,5 +1,6 @@
 package com.jruchel.caloriecounter.model.api.meal;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,10 @@ import lombok.*;
 public class DailyIntakeReportDTO {
 
     private String username;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
+
     private int calorieLimit;
     private int caloriesConsumed;
     @Builder.Default private List<MealDTO> meals = new ArrayList<>();
