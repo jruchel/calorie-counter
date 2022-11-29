@@ -48,7 +48,7 @@ public class IntakeReportService {
     private int sumDailyCalories(List<Meal> meals) {
         int sum = 0;
         for (Meal m : meals) {
-            sum += m.getCalories();
+            sum += m.getCaloriesSum();
         }
         return sum;
     }

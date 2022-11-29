@@ -16,7 +16,14 @@ public class Meal {
     @Builder.Default @Id private String id = UUID.randomUUID().toString();
     private String userId;
     private String name;
-    private int calories;
     @Builder.Default private Map<String, Integer> foods = new HashMap<>();
     private Date time;
+
+    public int getCaloriesSum() {
+        int sum = 0;
+        for (String dish : foods.keySet()) {
+            sum += foods.get(dish);
+        }
+        return sum;
+    }
 }

@@ -15,7 +15,7 @@ public class DailyIntakeReportDTO {
 
     private String username;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
 
     private int calorieLimit;

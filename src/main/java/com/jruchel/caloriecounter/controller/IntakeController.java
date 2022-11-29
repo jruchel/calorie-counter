@@ -29,10 +29,7 @@ public class IntakeController {
             @PathVariable String username) {
         Meal meal =
                 mealService.addMeal(
-                        username,
-                        mealAdditionRequest.getName(),
-                        mealAdditionRequest.getCalories(),
-                        mealAdditionRequest.getFoods());
+                        username, mealAdditionRequest.getName(), mealAdditionRequest.getFoods());
 
         return ResponseEntity.status(201).body(mealMapper.toDTO(meal));
     }
