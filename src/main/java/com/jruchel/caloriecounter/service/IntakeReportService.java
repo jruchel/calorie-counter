@@ -3,6 +3,7 @@ package com.jruchel.caloriecounter.service;
 import com.jruchel.caloriecounter.model.internal.DailyIntakeReport;
 import com.jruchel.caloriecounter.model.internal.Meal;
 import com.jruchel.caloriecounter.model.internal.User;
+import com.jruchel.caloriecounter.repository.DailyIntakeReportRepository;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,7 @@ public class IntakeReportService {
 
     private final MealService mealService;
     private final UserService userService;
+    private final DailyIntakeReportRepository dailyIntakeReportRepository;
 
     public DailyIntakeReport generateDailyIntakeReport(final String username) {
         User user = userService.findByUsername(username);
@@ -33,6 +35,10 @@ public class IntakeReportService {
                 leftToConsume,
                 dailyLimitReached,
                 dailyLimitReached && isDailyLimitExceeded(dailyLimit, caloriesConsumed));
+    }
+
+    public DailyIntakeReport saveDailyIntakeReport(DailyIntakeReport dailyIntakeReport) {
+        return dailyIntakeReportRepository.save(dailyIntakeReport);
     }
 
     private boolean isDailyLimitReached(int dailyLimit, int caloriesConsumed) {
