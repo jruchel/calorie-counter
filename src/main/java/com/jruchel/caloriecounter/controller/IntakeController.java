@@ -4,12 +4,12 @@ import com.jruchel.caloriecounter.mapper.MealMapper;
 import com.jruchel.caloriecounter.model.api.meal.DailyIntakeReportDTO;
 import com.jruchel.caloriecounter.model.api.meal.MealAdditionRequest;
 import com.jruchel.caloriecounter.model.api.meal.MealDTO;
-import com.jruchel.caloriecounter.model.api.meal.MealDeletionRequest;
 import com.jruchel.caloriecounter.model.internal.Meal;
 import com.jruchel.caloriecounter.service.IntakeReportService;
 import com.jruchel.caloriecounter.service.MealService;
-import jakarta.validation.Valid;
+import java.util.Date;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,15 +43,13 @@ public class IntakeController {
         return ResponseEntity.ok(responseBody);
     }
 
-    @DeleteMapping("/meals/{username}")
+    @DeleteMapping("/meals/{username}/{mealName}")
     public ResponseEntity<MealDTO> deleteMeal(
-            @RequestBody MealDeletionRequest mealDeletionRequest, @PathVariable String username) {
-        MealDTO responseBody =
-                mealMapper.toDTO(
-                        mealService.deleteMeal(
-                                username,
-                                mealDeletionRequest.getName(),
-                                mealDeletionRequest.getDate()));
+            @PathVariable(name = "username") String username,
+            @PathVariable(name = "mealName") String mealName,
+            @RequestParam(required = false) Date date) {
+        if (date == null) date = new Date();
+        MealDTO responseBody = mealMapper.toDTO(mealService.deleteMeal(username, mealName, date));
         return ResponseEntity.ok(responseBody);
     }
 

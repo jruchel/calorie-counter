@@ -1,8 +1,8 @@
 package com.jruchel.caloriecounter.error;
 
 import com.jruchel.caloriecounter.model.api.ErrorResponse;
-import jakarta.validation.ValidationException;
 import java.util.Date;
+import javax.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;

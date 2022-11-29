@@ -1,9 +1,9 @@
 package com.jruchel.caloriecounter.model.api.meal;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.util.HashMap;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.*;
 
 @Getter

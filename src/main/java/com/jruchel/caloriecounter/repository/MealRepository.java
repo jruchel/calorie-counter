@@ -31,14 +31,17 @@ public interface MealRepository extends MongoRepository<Meal, String> {
                 .collect(Collectors.toList());
     }
 
-    default List<Meal> findMealsByDateForUser(String userId, Date date) {
+    default List<Meal> findMealsByDayForUser(String userId, Date date) {
         return findMealsByUser(userId).stream()
-                .filter(meal -> meal.getTime().equals(date))
+                .filter(
+                        meal ->
+                                DateUtils.removeTime(meal.getTime())
+                                        .equals(DateUtils.removeTime(date)))
                 .collect(Collectors.toList());
     }
 
-    default Meal findMealByDateAndNameForUser(String userId, Date date, String name) {
-        return findMealsByDateForUser(userId, date).stream()
+    default Meal findMealByDayAndNameForUser(String userId, Date date, String name) {
+        return findMealsByDayForUser(userId, date).stream()
                 .filter(meal -> meal.getName().equals(name))
                 .findFirst()
                 .orElse(null);

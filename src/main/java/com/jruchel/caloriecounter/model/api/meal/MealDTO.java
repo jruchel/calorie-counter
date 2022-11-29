@@ -1,10 +1,10 @@
 package com.jruchel.caloriecounter.model.api.meal;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Min;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import javax.validation.constraints.Min;
 import lombok.*;
 
 @Getter
