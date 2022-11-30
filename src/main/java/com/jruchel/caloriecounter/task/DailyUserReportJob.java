@@ -3,6 +3,7 @@ package com.jruchel.caloriecounter.task;
 import com.jruchel.caloriecounter.model.internal.DailyIntakeReport;
 import com.jruchel.caloriecounter.model.internal.User;
 import com.jruchel.caloriecounter.service.IntakeReportService;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -18,7 +19,7 @@ public class DailyUserReportJob {
     @Async
     public void saveUserReport(User user) {
         DailyIntakeReport dailyIntakeReport =
-                intakeReportService.generateDailyIntakeReport(user.getUsername());
+                intakeReportService.generateDailyIntakeReport(user.getUsername(), new Date());
         intakeReportService.saveDailyIntakeReport(dailyIntakeReport);
     }
 }

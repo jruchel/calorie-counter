@@ -59,9 +59,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	//Flapdoodle
-	implementation group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '4.0.7-beta'
-
+	implementation group: 'joda-time', name: 'joda-time', version: '2.12.1'
 
 	//Mapstruct
 	implementation "org.mapstruct:mapstruct:1.5.3.Final"

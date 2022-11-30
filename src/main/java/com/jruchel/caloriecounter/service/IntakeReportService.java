@@ -18,9 +18,9 @@ public class IntakeReportService {
     private final UserService userService;
     private final DailyIntakeReportRepository dailyIntakeReportRepository;
 
-    public DailyIntakeReport generateDailyIntakeReport(final String username) {
+    public DailyIntakeReport generateDailyIntakeReport(final String username, Date date) {
         User user = userService.findByUsername(username);
-        List<Meal> meals = mealService.getTodaysMealsForUser(username);
+        List<Meal> meals = mealService.getMealsByDayByUser(username, date);
         int caloriesConsumed = sumDailyCalories(meals);
         int leftToConsume = user.getDailyLimit() - caloriesConsumed;
         int dailyLimit = user.getDailyLimit();

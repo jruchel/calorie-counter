@@ -27,6 +27,11 @@ public class MealService extends AbstractService<Meal> {
         return mealRepository.insert(entry);
     }
 
+    public List<Meal> getMealsByDayByUser(final String username, Date date) {
+        User user = userService.findByUsername(username);
+        return mealRepository.findMealsByDayForUser(user.getId(), date);
+    }
+
     public List<Meal> getTodaysMealsForUser(final String username) {
         User user = userService.findByUsername(username);
         return mealRepository.findTodaysMealsByUser(user.getId());

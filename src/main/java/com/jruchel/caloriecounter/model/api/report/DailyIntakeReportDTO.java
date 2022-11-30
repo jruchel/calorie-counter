@@ -1,6 +1,7 @@
-package com.jruchel.caloriecounter.model.api.meal;
+package com.jruchel.caloriecounter.model.api.report;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.jruchel.caloriecounter.model.api.meal.MealDTO;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
