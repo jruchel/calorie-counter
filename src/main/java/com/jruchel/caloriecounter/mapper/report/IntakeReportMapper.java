@@ -7,6 +7,7 @@ import com.jruchel.caloriecounter.model.internal.User;
 import com.jruchel.caloriecounter.model.internal.report.DailyIntakeReport;
 import com.jruchel.caloriecounter.model.internal.report.SingleDaySummary;
 import com.jruchel.caloriecounter.service.UserService;
+import com.jruchel.caloriecounter.utils.ReportUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -18,9 +19,10 @@ public abstract class IntakeReportMapper {
     @Autowired private UserService userService;
 
     @Mapping(
-            target = "leftToConsume",
+            target = "caloriesConsumed",
             source = "dailyIntakeReport",
-            qualifiedByName = "leftToConsume")
+            qualifiedByName = "consumed")
+    @Mapping(target = "leftToConsume", source = "dailyIntakeReport", qualifiedByName = "deficit")
     @Mapping(target = "surplus", source = "dailyIntakeReport", qualifiedByName = "surplus")
     @Mapping(target = "username", source = "dailyIntakeReport", qualifiedByName = "username")
     @Mapping(
@@ -33,6 +35,10 @@ public abstract class IntakeReportMapper {
             qualifiedByName = "limitExceeded")
     public abstract DailyIntakeReportDTO toDailyReportDTO(DailyIntakeReport dailyIntakeReport);
 
+    @Mapping(
+            target = "caloriesConsumed",
+            source = "dailyIntakeReport",
+            qualifiedByName = "consumed")
     @Mapping(
             target = "dailyLimitReached",
             source = "dailyIntakeReport",
@@ -47,28 +53,23 @@ public abstract class IntakeReportMapper {
 
     public abstract SingleDaySummaryDTO singleSummaryToDTO(SingleDaySummary singleDaySummary);
 
-    @Named("leftToConsume")
-    protected int getLeftToConsume(DailyIntakeReport dailyIntakeReport) {
-        int limit = dailyIntakeReport.getCalorieLimit();
-        int consumed = dailyIntakeReport.getCaloriesConsumed();
-        if (consumed > limit) return 0;
-        return limit - consumed;
+    @Named("consumed")
+    protected int getConsumed(DailyIntakeReport dailyIntakeReport) {
+        return dailyIntakeReport.sumDailyCalories();
     }
 
     @Named("surplus")
     protected int getSurplus(DailyIntakeReport dailyIntakeReport) {
         int limit = dailyIntakeReport.getCalorieLimit();
-        int consumed = dailyIntakeReport.getCaloriesConsumed();
-        if (consumed < limit) return 0;
-        return consumed - limit;
+        int consumed = dailyIntakeReport.sumDailyCalories();
+        return ReportUtils.calculateSurplus(limit, consumed);
     }
 
     @Named("deficit")
     protected int getDeficit(DailyIntakeReport dailyIntakeReport) {
         int limit = dailyIntakeReport.getCalorieLimit();
-        int consumed = dailyIntakeReport.getCaloriesConsumed();
-        if (consumed > limit) return 0;
-        return limit - consumed;
+        int consumed = dailyIntakeReport.sumDailyCalories();
+        return ReportUtils.calculateDeficit(limit, consumed);
     }
 
     @Named("username")
@@ -80,15 +81,12 @@ public abstract class IntakeReportMapper {
     @Named("limitReached")
     protected boolean isDailyLimitReached(DailyIntakeReport dailyIntakeReport) {
         int dailyLimit = dailyIntakeReport.getCalorieLimit();
-        int difference = dailyLimit - dailyIntakeReport.sumDailyCalories();
-        return difference < (double) 2 / 100 * dailyLimit;
+        return ReportUtils.isLimitReached(dailyLimit, dailyIntakeReport.sumDailyCalories());
     }
 
     @Named("limitExceeded")
     protected boolean isDailyLimitExceeded(DailyIntakeReport dailyIntakeReport) {
-        if (!isDailyLimitReached(dailyIntakeReport)) return false;
         int dailyLimit = dailyIntakeReport.getCalorieLimit();
-        int difference = Math.abs(dailyLimit - dailyIntakeReport.sumDailyCalories());
-        return difference > (double) 2 / 100 * dailyLimit;
+        return ReportUtils.isLimitExceeded(dailyLimit, dailyIntakeReport.sumDailyCalories());
     }
 }

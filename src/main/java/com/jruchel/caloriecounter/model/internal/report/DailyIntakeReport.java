@@ -18,7 +18,6 @@ public class DailyIntakeReport {
     private String userId;
     private Date date;
     private int calorieLimit;
-    private int caloriesConsumed;
     @Builder.Default private List<Meal> meals = new ArrayList<>();
 
     public int sumDailyCalories() {

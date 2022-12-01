@@ -7,6 +7,7 @@ import com.jruchel.caloriecounter.model.internal.report.DailyIntakeReport;
 import com.jruchel.caloriecounter.model.internal.report.SingleDaySummary;
 import com.jruchel.caloriecounter.model.internal.report.WeeklyIntakeReport;
 import com.jruchel.caloriecounter.repository.DailyIntakeReportRepository;
+import com.jruchel.caloriecounter.utils.DateUtils;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,6 @@ public class IntakeReportService {
                 user.getId(),
                 DateUtils.removeTime(new Date()),
                 user.getDailyLimit(),
-                DailyIntakeReport.sumDailyCalories(meals),
                 meals);
     }
 

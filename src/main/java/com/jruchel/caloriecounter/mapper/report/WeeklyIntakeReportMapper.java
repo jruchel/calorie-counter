@@ -3,8 +3,9 @@ package com.jruchel.caloriecounter.mapper.report;
 import com.jruchel.caloriecounter.model.api.report.WeeklyIntakeReportDTO;
 import com.jruchel.caloriecounter.model.internal.report.SingleDaySummary;
 import com.jruchel.caloriecounter.model.internal.report.WeeklyIntakeReport;
-import com.jruchel.caloriecounter.service.DateUtils;
 import com.jruchel.caloriecounter.service.UserService;
+import com.jruchel.caloriecounter.utils.DateUtils;
+import com.jruchel.caloriecounter.utils.ReportUtils;
 import java.util.ArrayList;
 import java.util.Map;
 import org.mapstruct.Mapper;
@@ -47,31 +48,26 @@ public abstract class WeeklyIntakeReportMapper {
     protected int getDeficit(WeeklyIntakeReport weeklyIntakeReport) {
         int limit = getWeeklyLimit(weeklyIntakeReport);
         int consumed = weeklyIntakeReport.sumTotalCalories();
-        if (consumed > limit) return 0;
-        return limit - consumed;
+        return ReportUtils.calculateDeficit(limit, consumed);
     }
 
     @Named("surplus")
     protected int getSurplus(WeeklyIntakeReport weeklyIntakeReport) {
         int limit = getWeeklyLimit(weeklyIntakeReport);
         int consumed = weeklyIntakeReport.sumTotalCalories();
-        if (consumed < limit) return 0;
-        return consumed - limit;
+        return ReportUtils.calculateSurplus(limit, consumed);
     }
 
     @Named("limitReached")
     protected boolean getLimitReached(WeeklyIntakeReport weeklyIntakeReport) {
         int limit = getWeeklyLimit(weeklyIntakeReport);
-        int difference = limit - weeklyIntakeReport.sumTotalCalories();
-        return difference < (double) 2 / 100 * limit;
+        return ReportUtils.isLimitReached(limit, weeklyIntakeReport.sumTotalCalories());
     }
 
     @Named("limitExceeded")
     protected boolean getLimitExceeded(WeeklyIntakeReport weeklyIntakeReport) {
-        if (!getLimitReached(weeklyIntakeReport)) return false;
         int dailyLimit = getWeeklyLimit(weeklyIntakeReport);
-        int difference = Math.abs(dailyLimit - weeklyIntakeReport.sumTotalCalories());
-        return difference > (double) 2 / 100 * dailyLimit;
+        return ReportUtils.isLimitExceeded(dailyLimit, weeklyIntakeReport.sumTotalCalories());
     }
 
     @Named("weeklyLimit")

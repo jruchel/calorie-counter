@@ -1,7 +1,7 @@
 package com.jruchel.caloriecounter.repository;
 
 import com.jruchel.caloriecounter.model.internal.report.DailyIntakeReport;
-import com.jruchel.caloriecounter.service.DateUtils;
+import com.jruchel.caloriecounter.utils.DateUtils;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;

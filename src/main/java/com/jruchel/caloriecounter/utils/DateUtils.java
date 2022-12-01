@@ -1,4 +1,4 @@
-package com.jruchel.caloriecounter.service;
+package com.jruchel.caloriecounter.utils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
