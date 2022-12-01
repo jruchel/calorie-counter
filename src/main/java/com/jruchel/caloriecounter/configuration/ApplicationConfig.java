@@ -1,5 +1,6 @@
 package com.jruchel.caloriecounter.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -13,9 +14,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 public class ApplicationConfig {
 
     @Bean
-    public TaskScheduler taskScheduler() {
+    public TaskScheduler taskScheduler(@Value("${THREAD_COUNT}") int threadCount) {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.setPoolSize(23);
+        threadPoolTaskScheduler.setPoolSize(threadCount);
         threadPoolTaskScheduler.setThreadNamePrefix("task-scheduler");
         threadPoolTaskScheduler.initialize();
         return threadPoolTaskScheduler;
