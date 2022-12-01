@@ -12,9 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DailyIntakeReportDTO {
-
-    private String username;
+public class SingleDaySummaryDTO {
 
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
@@ -22,8 +20,8 @@ public class DailyIntakeReportDTO {
     private int calorieLimit;
     private int caloriesConsumed;
     @Builder.Default private List<MealDTO> meals = new ArrayList<>();
-    private int leftToConsume;
-    private int surplus;
+    private int surplusCalories;
+    private int caloricDeficit;
     @Builder.Default private boolean dailyLimitReached = false;
     @Builder.Default private boolean dailyLimitExceeded = false;
 }

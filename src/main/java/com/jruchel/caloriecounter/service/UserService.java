@@ -21,6 +21,10 @@ public class UserService extends AbstractService<User> {
         return userRepository.insert(user);
     }
 
+    public User findById(String id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

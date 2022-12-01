@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DateUtils {
 
@@ -14,11 +15,28 @@ public class DateUtils {
     }
 
     public static Date getPreviousDay(Date date) {
+        removeTime(date);
         return Date.from(
                 convertToLocalDateViaInstant(date)
                         .minusDays(1)
                         .atZone(ZoneId.systemDefault())
                         .toInstant());
+    }
+
+    public static List<Date> getNonFutureDates(List<Date> dates) {
+        return dates.stream()
+                .filter(
+                        date -> {
+                            Date nextDay = getNextDay(date);
+                            return date.before(nextDay);
+                        })
+                .collect(Collectors.toList());
+    }
+
+    public static String getDayOfTheWeek(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
     }
 
     public static int getWeekOfTheMonthNumber(Date date) {
@@ -37,14 +55,14 @@ public class DateUtils {
         List<Date> result = new ArrayList<>();
         Date monday =
                 Date.from(
-                        LocalDateTime.now(ZoneId.systemDefault())
+                        convertToLocalDateViaInstant(date)
                                 .with(LocalTime.MIN)
                                 .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
                                 .atZone(ZoneId.systemDefault())
                                 .toInstant());
         result.add(monday);
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 7; i++) {
             result.add(getNextDay(result.get(i)));
         }
 
