@@ -33,6 +33,14 @@ public class DateUtils {
                 .collect(Collectors.toList());
     }
 
+    public static int getDayOfTheWeekNumber(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int result = calendar.get(Calendar.DAY_OF_WEEK);
+        if (result == 1) return 7;
+        return result - 1;
+    }
+
     public static String getDayOfTheWeek(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

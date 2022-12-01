@@ -3,7 +3,10 @@ package com.jruchel.caloriecounter.mapper.report;
 import com.jruchel.caloriecounter.model.api.report.WeeklyIntakeReportDTO;
 import com.jruchel.caloriecounter.model.internal.report.SingleDaySummary;
 import com.jruchel.caloriecounter.model.internal.report.WeeklyIntakeReport;
+import com.jruchel.caloriecounter.service.DateUtils;
 import com.jruchel.caloriecounter.service.UserService;
+import java.util.ArrayList;
+import java.util.Map;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -73,14 +76,17 @@ public abstract class WeeklyIntakeReportMapper {
 
     @Named("weeklyLimit")
     protected int getWeeklyLimit(WeeklyIntakeReport weeklyIntakeReport) {
-        int missingDays = 7 - weeklyIntakeReport.getWeekdays().size();
+        Map<String, SingleDaySummary> weekdays = weeklyIntakeReport.getWeekdays();
+        SingleDaySummary todaysSummary =
+                new ArrayList<>(weekdays.values()).get(weekdays.size() - 1);
+        int missingDays = 7 - DateUtils.getDayOfTheWeekNumber(todaysSummary.getDate());
         int userLimit = userService.findById(weeklyIntakeReport.getUserId()).getDailyLimit();
         int limit = 0;
 
-        for (SingleDaySummary singleDaySummary : weeklyIntakeReport.getWeekdays().values()) {
+        for (SingleDaySummary singleDaySummary : weekdays.values()) {
             limit += singleDaySummary.getCalorieLimit();
         }
-        return limit * missingDays + userLimit;
+        return limit + missingDays * userLimit;
     }
 
     @Named("totalConsumed")
