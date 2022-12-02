@@ -1,5 +1,6 @@
 package com.jruchel.caloriecounter.controller.intake;
 
+import com.jruchel.caloriecounter.error.UserNotFoundException;
 import com.jruchel.caloriecounter.mapper.report.IntakeReportMapper;
 import com.jruchel.caloriecounter.mapper.report.WeeklyIntakeReportMapper;
 import com.jruchel.caloriecounter.model.api.report.DailyIntakeReportDTO;
@@ -26,7 +27,8 @@ public class IntakeReportController {
     @GetMapping("/day/{username}")
     public ResponseEntity<DailyIntakeReportDTO> getDailyReport(
             @PathVariable String username,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date date) {
+            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date date)
+            throws UserNotFoundException {
         DailyIntakeReportDTO responseBody;
         if (date == null || DateUtils.isSameDay(date, new Date())) {
             responseBody =
@@ -42,7 +44,7 @@ public class IntakeReportController {
 
     @GetMapping("/day/today/{username}")
     public ResponseEntity<DailyIntakeReportDTO> getTodaysReport(
-            @PathVariable(required = false) String username) {
+            @PathVariable(required = false) String username) throws UserNotFoundException {
         DailyIntakeReportDTO responseBody =
                 intakeReportMapper.toDailyReportDTO(
                         intakeReportService.generateDailyIntakeReport(username));
@@ -51,7 +53,7 @@ public class IntakeReportController {
 
     @GetMapping("/day/yesterday/{username}")
     public ResponseEntity<DailyIntakeReportDTO> getYesterdaysReport(
-            @PathVariable(required = false) String username) {
+            @PathVariable(required = false) String username) throws UserNotFoundException {
         DailyIntakeReportDTO responseBody =
                 intakeReportMapper.toDailyReportDTO(
                         intakeReportService.getDailyIntakeReport(
@@ -62,7 +64,8 @@ public class IntakeReportController {
     @GetMapping("/week/current/{username}")
     public ResponseEntity<WeeklyIntakeReportDTO> getWeeklyReport(
             @PathVariable String username,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date date) {
+            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date date)
+            throws UserNotFoundException {
         WeeklyIntakeReportDTO responseBody;
         if (date == null) date = new Date();
         responseBody =

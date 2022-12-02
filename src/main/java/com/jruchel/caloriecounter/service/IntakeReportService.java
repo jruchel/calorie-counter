@@ -1,5 +1,6 @@
 package com.jruchel.caloriecounter.service;
 
+import com.jruchel.caloriecounter.error.UserNotFoundException;
 import com.jruchel.caloriecounter.mapper.report.IntakeReportMapper;
 import com.jruchel.caloriecounter.model.internal.Meal;
 import com.jruchel.caloriecounter.model.internal.User;
@@ -21,7 +22,8 @@ public class IntakeReportService {
     private final DailyIntakeReportRepository dailyIntakeReportRepository;
     private final IntakeReportMapper intakeReportMapper;
 
-    public DailyIntakeReport generateDailyIntakeReport(final String username) {
+    public DailyIntakeReport generateDailyIntakeReport(final String username)
+            throws UserNotFoundException {
         User user = userService.findByUsername(username);
         List<Meal> meals = mealService.getTodaysMealsForUser(username);
         return new DailyIntakeReport(
@@ -32,7 +34,8 @@ public class IntakeReportService {
                 meals);
     }
 
-    public WeeklyIntakeReport generateWeeklyIntakeReport(final String username, Date date) {
+    public WeeklyIntakeReport generateWeeklyIntakeReport(final String username, Date date)
+            throws UserNotFoundException {
         User user = userService.findByUsername(username);
         List<Date> weekDays = DateUtils.getNonFutureDates(DateUtils.getWeekDays(date));
         weekDays.remove(weekDays.size() - 1);
@@ -52,7 +55,8 @@ public class IntakeReportService {
         return new WeeklyIntakeReport(UUID.randomUUID().toString(), user.getId(), weekdaySummaries);
     }
 
-    public DailyIntakeReport getDailyIntakeReport(final String username, final Date date) {
+    public DailyIntakeReport getDailyIntakeReport(final String username, final Date date)
+            throws UserNotFoundException {
         User user = userService.findByUsername(username);
         return dailyIntakeReportRepository.findDailyReportByUserAndDay(user.getId(), date);
     }

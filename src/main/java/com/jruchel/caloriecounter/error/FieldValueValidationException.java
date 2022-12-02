@@ -1,10 +1,12 @@
 package com.jruchel.caloriecounter.error;
 
-public class FieldValueValidationException extends Exception {
+import org.springframework.http.HttpStatus;
+
+public class FieldValueValidationException extends ApplicationException {
 
     public FieldValueValidationException(
             String objectName, String fieldName, String fieldValue, String message) {
-        super(createMessage(objectName, fieldName, fieldValue, message));
+        super(createMessage(objectName, fieldName, fieldValue, message), HttpStatus.CONFLICT);
     }
 
     private static String createMessage(

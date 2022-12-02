@@ -1,6 +1,7 @@
 package com.jruchel.caloriecounter.service;
 
 import com.jruchel.caloriecounter.error.FieldValueValidationException;
+import com.jruchel.caloriecounter.error.UserNotFoundException;
 import com.jruchel.caloriecounter.model.internal.User;
 import com.jruchel.caloriecounter.repository.UserRepository;
 import java.util.List;
@@ -29,12 +30,18 @@ public class UserService extends AbstractService<User> {
         return userRepository.findAll();
     }
 
-    public User findByUsername(final String username) {
-        return userRepository.findByUsername(username);
+    public User findByUsername(final String username) throws UserNotFoundException {
+        return userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    public User changeCalorieLimit(final String username, final int newLimit) {
-        User user = userRepository.findByUsername(username);
+    public User changeCalorieLimit(final String username, final int newLimit)
+            throws UserNotFoundException {
+        User user =
+                userRepository
+                        .findByUsername(username)
+                        .orElseThrow(() -> new UserNotFoundException(username));
         user.setDailyLimit(newLimit);
         return userRepository.save(user);
     }

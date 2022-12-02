@@ -1,5 +1,6 @@
 package com.jruchel.caloriecounter.task;
 
+import com.jruchel.caloriecounter.error.UserNotFoundException;
 import com.jruchel.caloriecounter.model.internal.User;
 import com.jruchel.caloriecounter.model.internal.report.DailyIntakeReport;
 import com.jruchel.caloriecounter.service.IntakeReportService;
@@ -16,7 +17,7 @@ public class DailyUserReportJob {
     private final IntakeReportService intakeReportService;
 
     @Async
-    public void saveUserReport(User user) {
+    public void saveUserReport(User user) throws UserNotFoundException {
         DailyIntakeReport dailyIntakeReport =
                 intakeReportService.generateDailyIntakeReport(user.getUsername());
         intakeReportService.saveDailyIntakeReport(dailyIntakeReport);
