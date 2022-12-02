@@ -33,10 +33,7 @@ public interface MealRepository extends MongoRepository<Meal, String> {
 
     default List<Meal> findMealsByDayForUser(String userId, Date date) {
         return findMealsByUser(userId).stream()
-                .filter(
-                        meal ->
-                                DateUtils.removeTime(meal.getTime())
-                                        .equals(DateUtils.removeTime(date)))
+                .filter(meal -> DateUtils.isSameDay(meal.getTime(), date))
                 .collect(Collectors.toList());
     }
 

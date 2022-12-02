@@ -19,6 +19,15 @@ public class Meal {
     @Builder.Default private Map<String, Integer> foods = new HashMap<>();
     private Date time;
 
+    public void addFood(String name, int calories) {
+        if (this.foods.containsKey(name)) this.foods.put(name, this.foods.get(name) + calories);
+        else this.foods.put(name, calories);
+    }
+
+    public void addFoods(Map<String, Integer> foods) {
+        for (String key : foods.keySet()) addFood(key, foods.get(key));
+    }
+
     public int getCaloriesSum() {
         int sum = 0;
         for (String dish : foods.keySet()) {
