@@ -1,6 +1,7 @@
 package com.jruchel.caloriecounter.controller;
 
 import com.jruchel.caloriecounter.error.FieldValueValidationException;
+import com.jruchel.caloriecounter.error.UserNotFoundException;
 import com.jruchel.caloriecounter.mapper.UserMapper;
 import com.jruchel.caloriecounter.model.api.user.UserCreationRequest;
 import com.jruchel.caloriecounter.model.api.user.UserCreationResponse;
@@ -32,14 +33,15 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserDTO> findByUsername(@PathVariable String username) {
+    public ResponseEntity<UserDTO> findByUsername(@PathVariable String username)
+            throws UserNotFoundException {
         UserDTO responseBody = userMapper.toDTO(userService.findByUsername(username));
         return ResponseEntity.ok(responseBody);
     }
 
     @PatchMapping("/limit")
     public ResponseEntity<UserDTO> changeCalorieLimit(
-            @RequestBody UserUpdateRequest userUpdateRequest) {
+            @RequestBody UserUpdateRequest userUpdateRequest) throws UserNotFoundException {
         UserDTO responseBody =
                 userMapper.toDTO(
                         userService.changeCalorieLimit(

@@ -1,5 +1,6 @@
 package com.jruchel.caloriecounter.task;
 
+import com.jruchel.caloriecounter.error.UserNotFoundException;
 import com.jruchel.caloriecounter.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,16 @@ public class DailyUserReportScheduler {
 
     @Scheduled(cron = "0 59 23 * * *")
     public void saveDailyUserReports() {
-        userService.getAllUsers().forEach(dailyUserReportJob::saveUserReport);
+        userService
+                .getAllUsers()
+                .forEach(
+                        user -> {
+                            try {
+                                dailyUserReportJob.saveUserReport(user);
+                            } catch (UserNotFoundException e) {
+                                log.error("Save daily user reports job failed");
+                                log.error(e.getMessage());
+                            }
+                        });
     }
 }

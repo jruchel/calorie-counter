@@ -1,5 +1,7 @@
 package com.jruchel.caloriecounter.service;
 
+import com.jruchel.caloriecounter.error.NutritionInformationNotFound;
+import com.jruchel.caloriecounter.error.UserNotFoundException;
 import com.jruchel.caloriecounter.model.internal.Meal;
 import com.jruchel.caloriecounter.model.internal.User;
 import com.jruchel.caloriecounter.repository.MealRepository;
@@ -16,9 +18,11 @@ public class MealService extends AbstractService<Meal> {
 
     private final MealRepository mealRepository;
     private final UserService userService;
+    private final NutritionService nutritionService;
 
-    public Meal addMeal(
-            final String username, final String name, final Map<String, Integer> foods) {
+    public Meal addMeal(final String username, final String name, Map<String, Integer> foods)
+            throws NutritionInformationNotFound, UserNotFoundException {
+        addCaloriesToFoods(foods);
         User user = userService.findByUsername(username);
         Meal entry = mealRepository.findMealByDayAndNameForUser(user.getId(), new Date(), name);
         if (entry != null) {
@@ -29,19 +33,33 @@ public class MealService extends AbstractService<Meal> {
         return mealRepository.save(entry);
     }
 
-    public List<Meal> getTodaysMealsForUser(final String username) {
+    private void addCaloriesToFoods(Map<String, Integer> foods)
+            throws NutritionInformationNotFound {
+        for (String key : foods.keySet()) {
+            if (foods.get(key) <= 0) {
+                foods.put(key, getCaloriesForFood(key));
+            }
+        }
+    }
+
+    private int getCaloriesForFood(String food) throws NutritionInformationNotFound {
+        return nutritionService.getCalories(food);
+    }
+
+    public List<Meal> getTodaysMealsForUser(final String username) throws UserNotFoundException {
         User user = userService.findByUsername(username);
         return mealRepository.findTodaysMealsByUser(user.getId());
     }
 
-    public Meal deleteMeal(final String username, final String name, final Date date) {
+    public Meal deleteMeal(final String username, final String name, final Date date)
+            throws UserNotFoundException {
         User user = userService.findByUsername(username);
         Meal meal = mealRepository.findMealByDayAndNameForUser(user.getId(), date, name);
         mealRepository.delete(meal);
         return meal;
     }
 
-    public List<Meal> getMealsByUser(String username) {
+    public List<Meal> getMealsByUser(String username) throws UserNotFoundException {
         User user = userService.findByUsername(username);
         return mealRepository.findMealsByUser(user.getId());
     }

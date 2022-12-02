@@ -31,14 +31,10 @@ public class ErrorHandler {
                                 .build());
     }
 
-    @ExceptionHandler(FieldValueValidationException.class)
-    public ResponseEntity<ErrorResponse> fieldValueValidationException(
-            FieldValueValidationException fieldValueValidationException) {
-        return createResponseEntity(
-                new ErrorResponse(
-                        fieldValueValidationException.getMessage(),
-                        new Date(),
-                        HttpStatus.CONFLICT));
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ErrorResponse> applicationException(
+            ApplicationException applicationException) {
+        return createResponseEntity(applicationException.toErrorResponse());
     }
 
     @ExceptionHandler(ValidationException.class)

@@ -1,6 +1,7 @@
 package com.jruchel.caloriecounter.repository;
 
 import com.jruchel.caloriecounter.model.internal.User;
+import java.util.Optional;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -13,7 +14,7 @@ public interface UserRepository extends MongoRepository<User, String> {
         return findByUsername(username) == null;
     }
 
-    default User findByUsername(String username) {
+    default Optional<User> findByUsername(String username) {
         ExampleMatcher matcher =
                 ExampleMatcher.matchingAny()
                         .withIgnoreCase()
@@ -23,6 +24,6 @@ public interface UserRepository extends MongoRepository<User, String> {
                                         ExampleMatcher.StringMatcher.EXACT));
         Example<User> usernameExample =
                 Example.of(User.builder().username(username).build(), matcher);
-        return findAll(usernameExample).stream().findFirst().orElse(null);
+        return findAll(usernameExample).stream().findFirst();
     }
 }

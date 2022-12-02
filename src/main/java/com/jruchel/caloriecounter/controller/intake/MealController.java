@@ -1,5 +1,7 @@
 package com.jruchel.caloriecounter.controller.intake;
 
+import com.jruchel.caloriecounter.error.NutritionInformationNotFound;
+import com.jruchel.caloriecounter.error.UserNotFoundException;
 import com.jruchel.caloriecounter.mapper.MealMapper;
 import com.jruchel.caloriecounter.model.api.meal.MealAdditionRequest;
 import com.jruchel.caloriecounter.model.api.meal.MealDTO;
@@ -23,7 +25,8 @@ public class MealController {
     @PostMapping("/{username}")
     public ResponseEntity<MealDTO> addMeal(
             @RequestBody @Valid MealAdditionRequest mealAdditionRequest,
-            @PathVariable String username) {
+            @PathVariable String username)
+            throws UserNotFoundException, NutritionInformationNotFound {
         Meal meal =
                 mealService.addMeal(
                         username, mealAdditionRequest.getName(), mealAdditionRequest.getFoods());
@@ -35,21 +38,24 @@ public class MealController {
     public ResponseEntity<MealDTO> deleteMeal(
             @PathVariable(name = "username") String username,
             @PathVariable(name = "mealName") String mealName,
-            @RequestParam(required = false) Date date) {
+            @RequestParam(required = false) Date date)
+            throws UserNotFoundException {
         if (date == null) date = new Date();
         MealDTO responseBody = mealMapper.toDTO(mealService.deleteMeal(username, mealName, date));
         return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("/{username}/today")
-    public ResponseEntity<List<MealDTO>> getTodaysMealsByUser(@PathVariable String username) {
+    public ResponseEntity<List<MealDTO>> getTodaysMealsByUser(@PathVariable String username)
+            throws UserNotFoundException {
         List<MealDTO> responseBody =
                 mealMapper.toDTOList(mealService.getTodaysMealsForUser(username));
         return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<List<MealDTO>> getMealsByUser(@PathVariable String username) {
+    public ResponseEntity<List<MealDTO>> getMealsByUser(@PathVariable String username)
+            throws UserNotFoundException {
         List<MealDTO> responseBody = mealMapper.toDTOList(mealService.getMealsByUser(username));
         return ResponseEntity.ok(responseBody);
     }
