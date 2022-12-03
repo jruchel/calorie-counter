@@ -1,6 +1,6 @@
 package com.jruchel.caloriecounter.service;
 
-import com.jruchel.caloriecounter.error.UserNotFoundException;
+import com.jruchel.caloriecounter.error.exceptions.UserNotFoundException;
 import com.jruchel.caloriecounter.mapper.report.IntakeReportMapper;
 import com.jruchel.caloriecounter.model.internal.Meal;
 import com.jruchel.caloriecounter.model.internal.User;

@@ -1,6 +1,6 @@
 package com.jruchel.caloriecounter.service;
 
-import com.jruchel.caloriecounter.error.NutritionInformationNotFound;
+import com.jruchel.caloriecounter.error.exceptions.NutritionInformationNotFound;
 import com.jruchel.caloriecounter.service.nutritionix.NutritionixClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

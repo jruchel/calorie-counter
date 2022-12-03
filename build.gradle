@@ -76,6 +76,9 @@ dependencies {
 	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 	testAnnotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 
+	//DeepL
+	implementation group: 'com.deepl.api', name: 'deepl-java', version: '0.2.1'
+
 
 }
 
