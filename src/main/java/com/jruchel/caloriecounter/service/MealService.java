@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +48,11 @@ public class MealService extends AbstractService<Meal> {
 
     private int getCaloriesForFood(String food)
             throws NutritionInformationNotFound, DeepLException, InterruptedException {
-        return nutritionService.getCalories(translationService.translate(food, "en-US"));
+        try {
+            return nutritionService.getCalories(translationService.translate(food, "en-US"));
+        } catch (HttpClientErrorException clientErrorException) {
+            throw new NutritionInformationNotFound(food);
+        }
     }
 
     public List<Meal> getTodaysMealsForUser(final String username) throws UserNotFoundException {
