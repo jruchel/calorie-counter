@@ -1,7 +1,8 @@
 package com.jruchel.caloriecounter.controller.intake;
 
-import com.jruchel.caloriecounter.error.NutritionInformationNotFound;
-import com.jruchel.caloriecounter.error.UserNotFoundException;
+import com.deepl.api.DeepLException;
+import com.jruchel.caloriecounter.error.exceptions.NutritionInformationNotFound;
+import com.jruchel.caloriecounter.error.exceptions.UserNotFoundException;
 import com.jruchel.caloriecounter.mapper.MealMapper;
 import com.jruchel.caloriecounter.model.api.meal.MealAdditionRequest;
 import com.jruchel.caloriecounter.model.api.meal.MealDTO;
@@ -26,7 +27,8 @@ public class MealController {
     public ResponseEntity<MealDTO> addMeal(
             @RequestBody @Valid MealAdditionRequest mealAdditionRequest,
             @PathVariable String username)
-            throws UserNotFoundException, NutritionInformationNotFound {
+            throws UserNotFoundException, NutritionInformationNotFound, InterruptedException,
+                    DeepLException {
         Meal meal =
                 mealService.addMeal(
                         username, mealAdditionRequest.getName(), mealAdditionRequest.getFoods());

@@ -1,7 +1,7 @@
 package com.jruchel.caloriecounter.controller;
 
-import com.jruchel.caloriecounter.error.FieldValueValidationException;
-import com.jruchel.caloriecounter.error.UserNotFoundException;
+import com.jruchel.caloriecounter.error.exceptions.FieldValueValidationException;
+import com.jruchel.caloriecounter.error.exceptions.UserNotFoundException;
 import com.jruchel.caloriecounter.mapper.UserMapper;
 import com.jruchel.caloriecounter.model.api.user.UserCreationRequest;
 import com.jruchel.caloriecounter.model.api.user.UserCreationResponse;

@@ -1,4 +1,4 @@
-package com.jruchel.caloriecounter.error;
+package com.jruchel.caloriecounter.error.exceptions;
 
 import org.springframework.http.HttpStatus;
 

@@ -1,7 +1,7 @@
 package com.jruchel.caloriecounter.service;
 
-import com.jruchel.caloriecounter.error.FieldValueValidationException;
-import com.jruchel.caloriecounter.error.UserNotFoundException;
+import com.jruchel.caloriecounter.error.exceptions.FieldValueValidationException;
+import com.jruchel.caloriecounter.error.exceptions.UserNotFoundException;
 import com.jruchel.caloriecounter.model.internal.User;
 import com.jruchel.caloriecounter.repository.UserRepository;
 import java.util.List;

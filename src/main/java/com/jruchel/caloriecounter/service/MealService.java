@@ -1,7 +1,8 @@
 package com.jruchel.caloriecounter.service;
 
-import com.jruchel.caloriecounter.error.NutritionInformationNotFound;
-import com.jruchel.caloriecounter.error.UserNotFoundException;
+import com.deepl.api.DeepLException;
+import com.jruchel.caloriecounter.error.exceptions.NutritionInformationNotFound;
+import com.jruchel.caloriecounter.error.exceptions.UserNotFoundException;
 import com.jruchel.caloriecounter.model.internal.Meal;
 import com.jruchel.caloriecounter.model.internal.User;
 import com.jruchel.caloriecounter.repository.MealRepository;
@@ -19,9 +20,11 @@ public class MealService extends AbstractService<Meal> {
     private final MealRepository mealRepository;
     private final UserService userService;
     private final NutritionService nutritionService;
+    private final TranslationService translationService;
 
     public Meal addMeal(final String username, final String name, Map<String, Integer> foods)
-            throws NutritionInformationNotFound, UserNotFoundException {
+            throws NutritionInformationNotFound, UserNotFoundException, DeepLException,
+                    InterruptedException {
         addCaloriesToFoods(foods);
         User user = userService.findByUsername(username);
         Meal entry = mealRepository.findMealByDayAndNameForUser(user.getId(), new Date(), name);
@@ -34,7 +37,7 @@ public class MealService extends AbstractService<Meal> {
     }
 
     private void addCaloriesToFoods(Map<String, Integer> foods)
-            throws NutritionInformationNotFound {
+            throws NutritionInformationNotFound, InterruptedException, DeepLException {
         for (String key : foods.keySet()) {
             if (foods.get(key) <= 0) {
                 foods.put(key, getCaloriesForFood(key));
@@ -42,8 +45,9 @@ public class MealService extends AbstractService<Meal> {
         }
     }
 
-    private int getCaloriesForFood(String food) throws NutritionInformationNotFound {
-        return nutritionService.getCalories(food);
+    private int getCaloriesForFood(String food)
+            throws NutritionInformationNotFound, DeepLException, InterruptedException {
+        return nutritionService.getCalories(translationService.translate(food, "en-US"));
     }
 
     public List<Meal> getTodaysMealsForUser(final String username) throws UserNotFoundException {

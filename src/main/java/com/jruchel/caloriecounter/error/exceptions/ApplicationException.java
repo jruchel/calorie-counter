@@ -1,4 +1,4 @@
-package com.jruchel.caloriecounter.error;
+package com.jruchel.caloriecounter.error.exceptions;
 
 import com.jruchel.caloriecounter.model.api.ErrorResponse;
 import java.util.Date;

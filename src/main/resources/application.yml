@@ -7,3 +7,5 @@ nutritionix:
     app-id: ${NUTRITION_APP_ID}
     app-key: ${NUTRITION_APP_KEY}
     app-address: ${NUTRITION_APP_ADDRESS}
+deepl:
+  app-key: ${DEEPL_API_KEY}

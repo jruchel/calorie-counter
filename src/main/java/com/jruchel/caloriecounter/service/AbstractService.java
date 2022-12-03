@@ -1,6 +1,6 @@
 package com.jruchel.caloriecounter.service;
 
-import com.jruchel.caloriecounter.error.FieldValueValidationException;
+import com.jruchel.caloriecounter.error.exceptions.FieldValueValidationException;
 import java.lang.reflect.Field;
 
 public abstract class AbstractService<Type> {

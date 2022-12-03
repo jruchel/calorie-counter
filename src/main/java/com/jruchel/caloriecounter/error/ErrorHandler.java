@@ -1,5 +1,7 @@
 package com.jruchel.caloriecounter.error;
 
+import com.deepl.api.DeepLException;
+import com.jruchel.caloriecounter.error.exceptions.ApplicationException;
 import com.jruchel.caloriecounter.model.api.ErrorResponse;
 import java.util.Date;
 import javax.validation.ValidationException;
@@ -31,6 +33,21 @@ public class ErrorHandler {
                                 .build());
     }
 
+    @ExceptionHandler(DeepLException.class)
+    public ResponseEntity<ErrorResponse> deepLException(DeepLException deepLException) {
+        return createResponseEntity(
+                fromException(deepLException, HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorResponse> nullPointerException(
+            NullPointerException nullPointerException) {
+        if (nullPointerException.getMessage() == null
+                || nullPointerException.getMessage().isBlank())
+            nullPointerException = new NullPointerException("Resource not found");
+        return createResponseEntity(fromException(nullPointerException, HttpStatus.NOT_FOUND));
+    }
+
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ErrorResponse> applicationException(
             ApplicationException applicationException) {
@@ -43,6 +60,10 @@ public class ErrorHandler {
         return createResponseEntity(
                 new ErrorResponse(
                         validationException.getMessage(), new Date(), HttpStatus.CONFLICT));
+    }
+
+    private ErrorResponse fromException(Exception e, HttpStatus httpStatus) {
+        return new ErrorResponse(e.getMessage(), new Date(), httpStatus);
     }
 
     private ResponseEntity<ErrorResponse> createResponseEntity(ErrorResponse errorResponse) {
