@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends MongoRepository<User, String> {
 
     default boolean isUsernameUnique(String username) {
-        return findByUsername(username) == null;
+        return findByUsername(username).orElse(null) == null;
     }
 
     default Optional<User> findByUsername(String username) {

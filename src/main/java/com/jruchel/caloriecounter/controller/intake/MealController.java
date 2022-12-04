@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,23 @@ public class MealController {
                         username, mealAdditionRequest.getName(), mealAdditionRequest.getFoods());
 
         return ResponseEntity.status(201).body(mealMapper.toDTO(meal));
+    }
+
+    @PostMapping("/lookup")
+    public ResponseEntity<MealDTO> lookupMeal(
+            @RequestBody @Valid MealAdditionRequest mealAdditionRequest)
+            throws InterruptedException, NutritionInformationNotFound, DeepLException {
+        return ResponseEntity.ok(
+                mealMapper.toDTO(
+                        mealService.lookupMeal(
+                                mealAdditionRequest.getName(), mealAdditionRequest.getFoods())));
+    }
+
+    @PostMapping("/lookup/dish")
+    public ResponseEntity<Pair<String, Integer>> lookupDish(
+            @RequestParam String dish, @RequestParam String language)
+            throws InterruptedException, NutritionInformationNotFound, DeepLException {
+        return ResponseEntity.ok(mealService.lookupDish(dish, language));
     }
 
     @DeleteMapping("/{username}/{mealName}")

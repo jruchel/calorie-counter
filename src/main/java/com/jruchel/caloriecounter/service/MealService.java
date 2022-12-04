@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -37,19 +38,31 @@ public class MealService extends AbstractService<Meal> {
         return mealRepository.save(entry);
     }
 
+    public Pair<String, Integer> lookupDish(String name, String language)
+            throws InterruptedException, NutritionInformationNotFound, DeepLException {
+        return Pair.of(name, getCaloriesForFood(name, language));
+    }
+
+    public Meal lookupMeal(String name, Map<String, Integer> foods)
+            throws InterruptedException, NutritionInformationNotFound, DeepLException {
+        addCaloriesToFoods(foods);
+
+        return new Meal(null, null, name, foods, new Date());
+    }
+
     private void addCaloriesToFoods(Map<String, Integer> foods)
             throws NutritionInformationNotFound, InterruptedException, DeepLException {
         for (String key : foods.keySet()) {
             if (foods.get(key) <= 0) {
-                foods.put(key, getCaloriesForFood(key));
+                foods.put(key, getCaloriesForFood(key, "en-US"));
             }
         }
     }
 
-    private int getCaloriesForFood(String food)
+    private int getCaloriesForFood(String food, String language)
             throws NutritionInformationNotFound, DeepLException, InterruptedException {
         try {
-            return nutritionService.getCalories(translationService.translate(food, "en-US"));
+            return nutritionService.getCalories(translationService.translate(food, language));
         } catch (HttpClientErrorException clientErrorException) {
             throw new NutritionInformationNotFound(food);
         }
