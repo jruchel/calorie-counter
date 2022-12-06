@@ -42,26 +42,7 @@ public class IntakeReportController {
         return ResponseEntity.ok(responseBody);
     }
 
-    @GetMapping("/day/today/{username}")
-    public ResponseEntity<DailyIntakeReportDTO> getTodaysReport(
-            @PathVariable(required = false) String username) throws UserNotFoundException {
-        DailyIntakeReportDTO responseBody =
-                intakeReportMapper.toDailyReportDTO(
-                        intakeReportService.generateDailyIntakeReport(username));
-        return ResponseEntity.ok(responseBody);
-    }
-
-    @GetMapping("/day/yesterday/{username}")
-    public ResponseEntity<DailyIntakeReportDTO> getYesterdaysReport(
-            @PathVariable(required = false) String username) throws UserNotFoundException {
-        DailyIntakeReportDTO responseBody =
-                intakeReportMapper.toDailyReportDTO(
-                        intakeReportService.getDailyIntakeReport(
-                                username, DateUtils.getPreviousDay(new Date())));
-        return ResponseEntity.ok(responseBody);
-    }
-
-    @GetMapping("/week/current/{username}")
+    @GetMapping("/week/{username}")
     public ResponseEntity<WeeklyIntakeReportDTO> getWeeklyReport(
             @PathVariable String username,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date date)

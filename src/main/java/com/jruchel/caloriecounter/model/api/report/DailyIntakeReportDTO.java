@@ -21,9 +21,9 @@ public class DailyIntakeReportDTO {
 
     private int calorieLimit;
     private int caloriesConsumed;
-    @Builder.Default private List<MealDTO> meals = new ArrayList<>();
     private int leftToConsume;
     private int surplus;
     @Builder.Default private boolean dailyLimitReached = false;
     @Builder.Default private boolean dailyLimitExceeded = false;
+    @Builder.Default private List<MealDTO> meals = new ArrayList<>();
 }

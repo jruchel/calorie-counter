@@ -36,12 +36,10 @@ public class IntakeReportService {
 
     public WeeklyIntakeReport generateWeeklyIntakeReport(final String username, Date date)
             throws UserNotFoundException {
+        boolean isCurrentWeek = DateUtils.isCurrentWeek(date);
         User user = userService.findByUsername(username);
         List<Date> weekDays = DateUtils.getNonFutureDates(DateUtils.getWeekDays(date));
-        weekDays.remove(weekDays.size() - 1);
         Map<String, SingleDaySummary> weekdaySummaries = new LinkedHashMap<>();
-        SingleDaySummary todaysSummary =
-                intakeReportMapper.toSingleDaySummary(generateDailyIntakeReport(username));
 
         for (Date d : weekDays) {
             String day = DateUtils.getDayOfTheWeek(d);
@@ -50,7 +48,11 @@ public class IntakeReportService {
             if (daySummary != null) weekdaySummaries.put(day, daySummary);
         }
 
-        weekdaySummaries.put(DateUtils.getDayOfTheWeek(todaysSummary.getDate()), todaysSummary);
+        if (isCurrentWeek) {
+            SingleDaySummary todaysSummary =
+                    intakeReportMapper.toSingleDaySummary(generateDailyIntakeReport(username));
+            weekdaySummaries.put(DateUtils.getDayOfTheWeek(todaysSummary.getDate()), todaysSummary);
+        }
 
         return new WeeklyIntakeReport(UUID.randomUUID().toString(), user.getId(), weekdaySummaries);
     }

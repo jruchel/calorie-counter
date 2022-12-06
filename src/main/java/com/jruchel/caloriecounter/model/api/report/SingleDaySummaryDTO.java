@@ -17,11 +17,11 @@ public class SingleDaySummaryDTO {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
 
-    private int calorieLimit;
     private int caloriesConsumed;
-    @Builder.Default private List<MealDTO> meals = new ArrayList<>();
+    private int calorieLimit;
     private int surplusCalories;
     private int caloricDeficit;
     @Builder.Default private boolean dailyLimitReached = false;
     @Builder.Default private boolean dailyLimitExceeded = false;
+    @Builder.Default private List<MealDTO> meals = new ArrayList<>();
 }

@@ -27,8 +27,14 @@ public abstract class WeeklyIntakeReportMapper {
             target = "totalCaloriesConsumed",
             source = "weeklyIntakeReport",
             qualifiedByName = "totalConsumed")
-    @Mapping(target = "totalDeficit", source = "weeklyIntakeReport", qualifiedByName = "deficit")
-    @Mapping(target = "totalSurplus", source = "weeklyIntakeReport", qualifiedByName = "surplus")
+    @Mapping(
+            target = "totalDeficit",
+            source = "weeklyIntakeReport",
+            qualifiedByName = "totalDeficit")
+    @Mapping(
+            target = "totalSurplus",
+            source = "weeklyIntakeReport",
+            qualifiedByName = "totalSurplus")
     @Mapping(
             target = "weeklyLimitReached",
             source = "weeklyIntakeReport",
@@ -37,6 +43,26 @@ public abstract class WeeklyIntakeReportMapper {
             target = "weeklyLimitExceeded",
             source = "weeklyIntakeReport",
             qualifiedByName = "limitExceeded")
+    @Mapping(
+            target = "currentCalorieLimit",
+            source = "weeklyIntakeReport",
+            qualifiedByName = "currentLimit")
+    @Mapping(
+            target = "currentSurplus",
+            source = "weeklyIntakeReport",
+            qualifiedByName = "currentSurplus")
+    @Mapping(
+            target = "currentDeficit",
+            source = "weeklyIntakeReport",
+            qualifiedByName = "currentDeficit")
+    @Mapping(
+            target = "currentLimitReached",
+            source = "weeklyIntakeReport",
+            qualifiedByName = "currentLimitReached")
+    @Mapping(
+            target = "currentLimitExceeded",
+            source = "weeklyIntakeReport",
+            qualifiedByName = "currentLimitExceeded")
     public abstract WeeklyIntakeReportDTO toDTO(WeeklyIntakeReport weeklyIntakeReport);
 
     @Named("username")
@@ -44,16 +70,30 @@ public abstract class WeeklyIntakeReportMapper {
         return userService.findById(weeklyIntakeReport.getUserId()).getUsername();
     }
 
-    @Named("deficit")
+    @Named("totalDeficit")
     protected int getDeficit(WeeklyIntakeReport weeklyIntakeReport) {
         int limit = getWeeklyLimit(weeklyIntakeReport);
         int consumed = weeklyIntakeReport.sumTotalCalories();
         return ReportUtils.calculateDeficit(limit, consumed);
     }
 
-    @Named("surplus")
+    @Named("totalSurplus")
     protected int getSurplus(WeeklyIntakeReport weeklyIntakeReport) {
         int limit = getWeeklyLimit(weeklyIntakeReport);
+        int consumed = weeklyIntakeReport.sumTotalCalories();
+        return ReportUtils.calculateSurplus(limit, consumed);
+    }
+
+    @Named("currentDeficit")
+    protected int getCurrentDeficit(WeeklyIntakeReport weeklyIntakeReport) {
+        int limit = getCurrentCalorieLimit(weeklyIntakeReport);
+        int consumed = weeklyIntakeReport.sumTotalCalories();
+        return ReportUtils.calculateDeficit(limit, consumed);
+    }
+
+    @Named("currentSurplus")
+    protected int getCurrentSurplus(WeeklyIntakeReport weeklyIntakeReport) {
+        int limit = getCurrentCalorieLimit(weeklyIntakeReport);
         int consumed = weeklyIntakeReport.sumTotalCalories();
         return ReportUtils.calculateSurplus(limit, consumed);
     }
@@ -70,6 +110,18 @@ public abstract class WeeklyIntakeReportMapper {
         return ReportUtils.isLimitExceeded(dailyLimit, weeklyIntakeReport.sumTotalCalories());
     }
 
+    @Named("currentLimitReached")
+    protected boolean getCurrentLimitReached(WeeklyIntakeReport weeklyIntakeReport) {
+        int limit = getCurrentCalorieLimit(weeklyIntakeReport);
+        return ReportUtils.isLimitReached(limit, weeklyIntakeReport.sumTotalCalories());
+    }
+
+    @Named("currentLimitExceeded")
+    protected boolean getCurrentLimitExceeded(WeeklyIntakeReport weeklyIntakeReport) {
+        int dailyLimit = getCurrentCalorieLimit(weeklyIntakeReport);
+        return ReportUtils.isLimitExceeded(dailyLimit, weeklyIntakeReport.sumTotalCalories());
+    }
+
     @Named("weeklyLimit")
     protected int getWeeklyLimit(WeeklyIntakeReport weeklyIntakeReport) {
         Map<String, SingleDaySummary> weekdays = weeklyIntakeReport.getWeekdays();
@@ -83,6 +135,14 @@ public abstract class WeeklyIntakeReportMapper {
             limit += singleDaySummary.getCalorieLimit();
         }
         return limit + missingDays * userLimit;
+    }
+
+    @Named("currentLimit")
+    protected int getCurrentCalorieLimit(WeeklyIntakeReport weeklyIntakeReport) {
+        Map<String, SingleDaySummary> weekdays = weeklyIntakeReport.getWeekdays();
+        final int[] sum = new int[1];
+        weekdays.values().forEach(summary -> sum[0] += summary.getCalorieLimit());
+        return sum[0];
     }
 
     @Named("totalConsumed")

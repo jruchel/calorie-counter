@@ -33,6 +33,13 @@ public class DateUtils {
                 .collect(Collectors.toList());
     }
 
+    public static boolean isCurrentWeek(Date date) {
+        return getWeekDays(new Date()).stream()
+                .map(DateUtils::removeTime)
+                .collect(Collectors.toList())
+                .contains(removeTime(date));
+    }
+
     public static int getDayOfTheWeekNumber(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -70,7 +77,7 @@ public class DateUtils {
                                 .toInstant());
         result.add(monday);
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 6; i++) {
             result.add(getNextDay(result.get(i)));
         }
 
